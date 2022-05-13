@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon index.js",
+    "run": "pm2 start index.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.28.5",
+    "cors": "^2.8.5",
+    "express": "^4.18.0",
+    "node-fs": "^0.1.7",
+    "nodefs": "^0.0.2",
+    "nodemon": "^2.0.16",
+    "sqlite": "^4.1.1",
+    "sqlite3": "^5.0.6"
+  }
+}

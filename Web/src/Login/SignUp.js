@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useRouter } from '../Switcher/RouterContext';
+import { useNavigate } from "react-router-dom";
 import Copyright from './Copyright';
 import { useLogin } from './LoginContext';
 
@@ -18,7 +18,7 @@ const SignUp = () =>  {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [errorMessage, setErrorMessage] = useState();
     const { signUp } = useLogin();
-    const { setPage } = useRouter();  
+ const navigator = useNavigate();  
 
     const handleSignUp = async () => {
       if (!username) {
@@ -123,7 +123,7 @@ const SignUp = () =>  {
             </Button>
             <Grid container justifyContent="space-evenly">
               <Grid item>
-                <Link onClick={() => setPage('/login')} color="secondary" variant="body2">
+                <Link onClick={() => navigator.push('/login')} color="secondary" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

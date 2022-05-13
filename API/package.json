@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npx nodemon index.js",
-    "run": "pm2 start index.js"
+    "start-daemon": "pm2 start index.js",
+    "stop-daemon": "pm2 stop index.js"
   },
   "type": "module",
   "author": "",

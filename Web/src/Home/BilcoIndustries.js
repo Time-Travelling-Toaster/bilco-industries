@@ -1,13 +1,22 @@
-import { RouterProvider } from '../Switcher/RouterContext';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import Switch from '../Switcher/Switch';
 import { LoginProvider } from '../Login/LoginContext';
 import HeaderBar from '../Header/HeaderBar.js';
 import { createTheme, CssBaseline, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import { StrictMode, useState } from 'react';
 import { ConfigProvider } from '../Config/ConfigContext';
+import { BrowserRouter } from 'react-router-dom';
+import SlotMachine from '../Casino/Games/Pages/SlotMachine';
+import Blackjack from "../Casino/Games/Pages/Blackjack";
+import Sweepstake from "../Sweepstake/Sweepstake";
+import RoadtripPlanner from "../RoadtripPlanner/RoadtripPlanner";
+import Login from "../Login/Login";
+import SignUp from "../Login/SignUp";
+import {
+    Routes,
+    Route,
+} from "react-router-dom";
 
 const BilcoIndustries = () => {
     const cookies = document.cookie.split(";").reduce((reducer, cookie) => {
@@ -34,20 +43,28 @@ const BilcoIndustries = () => {
 
     return (
         <StrictMode>
-            <LocalizationProvider dateAdapter={AdapterMoment} >
-                <ConfigProvider cookies={cookies}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline>
-                            <RouterProvider>
+            <BrowserRouter>
+                <LocalizationProvider dateAdapter={AdapterMoment} >
+                    <ConfigProvider cookies={cookies}>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline>
                                 <LoginProvider>
                                     <HeaderBar isLightTheme={isLightTheme} setIsLightTheme={setIsLightTheme} />
-                                    <Switch />
+                                    <Routes>
+                                        <Route path="/casino/slot-machine" element={<SlotMachine />} />
+                                        <Route path="/casino/black-jack" element={<Blackjack />} />
+                                        <Route path="/sweepstake" element={<Sweepstake />} />
+                                        <Route path="/roadtrip" element={<RoadtripPlanner />} />
+                                        <Route path="/signup" element={<SignUp />} />
+                                        <Route path="/login" element={<Login />} />
+                                        <Route path="/" element={<Login />} />
+                                    </Routes>
                                 </LoginProvider>
-                            </RouterProvider>
-                        </CssBaseline>
-                    </ThemeProvider>
-                </ConfigProvider>
-            </LocalizationProvider>
+                            </CssBaseline>
+                        </ThemeProvider>
+                    </ConfigProvider>
+                </LocalizationProvider>
+            </BrowserRouter>
         </StrictMode>
     )
 }

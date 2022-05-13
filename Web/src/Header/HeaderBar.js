@@ -5,14 +5,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { useRouter } from '../Switcher/RouterContext';
+import { useNavigate } from "react-router-dom";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useLogin } from '../Login/LoginContext';
 import { Switch } from '@mui/material';
 import NavMenu from './NavMenu';
 
 const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
-  const { setPage } = useRouter();
+  const navigator = useNavigate();
   const { user, logout } = useLogin();
     
   return (
@@ -24,7 +24,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            onClick={() => setPage('')}
+            onClick={() => navigator.push('')}
           >
             Bilco Industries
           </Typography>
@@ -47,7 +47,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
                   <Button
                     onClick={() => {
                       logout();
-                      setPage('/login');
+                      navigator.push('/login');
                     }} 
                     variant="text"
                     color="secondary"
@@ -58,7 +58,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
               </>
             :
               <Button
-                onClick={() => setPage('/login')} 
+                onClick={() => navigator.push('/login')} 
                 variant="text"
                 color="secondary"
               >

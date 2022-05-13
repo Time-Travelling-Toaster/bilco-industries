@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { useLogin } from './LoginContext';
-import { useRouter } from '../Switcher/RouterContext';
+import { useNavigate } from "react-router-dom";
 import Copyright from './Copyright';
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
     const [remember, setRemember] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const { login } = useLogin();
-    const { setPage } = useRouter();
+ const navigator = useNavigate();
 
     const handleLogin = async () => {
         if (!username) {
@@ -35,7 +35,7 @@ const Login = () => {
 
         const response = await login(username, password, remember);
         if (response.status === 200) {
-            setPage('/roadtrip');
+            navigator.push('/roadtrip');
         }
 
         setErrorMessage("Username or password is incorrect")
@@ -105,7 +105,7 @@ const Login = () => {
                     </Button>
                     <Grid container justifyContent="space-evenly">
                         <Grid item>
-                            <Link onClick={() => setPage('/signup')} color="secondary" variant="body2">
+                            <Link onClick={() => navigator.push('/signup')} color="secondary" variant="body2">
                                 Don't have an account yet? Sign up here
                             </Link>
                         </Grid>

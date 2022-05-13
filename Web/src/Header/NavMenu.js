@@ -2,18 +2,18 @@ import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useLogin } from "../Login/LoginContext";
-import { useRouter } from "../Switcher/RouterContext";
+import { useNavigate } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useConfig } from "../Config/ConfigContext";
 
 const NavMenu = () => {
     const { user } = useLogin();
-    const { setPage } = useRouter();
+    const navigator = useNavigate();
     const { appConfig: { pages }} = useConfig()
     const [casinoMenuElement, setCasinoMenuElement] = useState(null);
     const [burgerMenuAnchor, setBurgerMenuAnchor] = useState(null);
-    const NavButton = ({title, path, logged}) => logged && !user ? null : <Button color="secondary" key={title} onClick={() => setPage(path)}>{title}</Button>
-    const MenuButton = ({title, path, logged}) => logged && !user ? null : <MenuItem color="secondary" key={title} onClick={() => setPage(path)}>{title}</MenuItem>
+    const NavButton = ({title, path, logged}) => logged && !user ? null : <Button color="secondary" key={title} onClick={() => navigator.push(path)}>{title}</Button>
+    const MenuButton = ({title, path, logged}) => logged && !user ? null : <MenuItem color="secondary" key={title} onClick={() => navigator.push(path)}>{title}</MenuItem>
 
     return (
         <>

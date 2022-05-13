@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useConfig } from "../Config/ConfigContext";
-import { useRouter } from "../Switcher/RouterContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginContext = createContext(null);
 
 export const LoginProvider = ({ children }) => {
     const [user, setUser] = useState({});
     const [isAuthenticated, setIsAuthenticated] = useState();
-    const { setPage } = useRouter();
+    const navigator = useNavigate();
 
     const { appConfig : { connectionStrings: { API } }, cookies } = useConfig();   
 
@@ -53,7 +53,7 @@ export const LoginProvider = ({ children }) => {
         setUser(null);
         setIsAuthenticated(false);
         document.cookie = "token=";
-        setPage("/login")
+        navigator.push("/login")
     };
 
     useEffect(() => {
@@ -78,7 +78,7 @@ export const LoginProvider = ({ children }) => {
                 setUser(null);
                 setIsAuthenticated(false);
                 document.cookie = "token=";
-                setPage("/login")
+                navigator.push("/login")
             }
         }
 
@@ -86,7 +86,7 @@ export const LoginProvider = ({ children }) => {
         return () => {
             cancel= true;
         }
-    }, [API, cookies.token, isAuthenticated, setPage, user])
+    }, [API, cookies.token, isAuthenticated, navigator, user])
      
     return (
         <LoginContext.Provider value={{ login, signUp, logout, user, isAuthenticated }}>

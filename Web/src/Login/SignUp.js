@@ -18,7 +18,7 @@ const SignUp = () =>  {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [errorMessage, setErrorMessage] = useState();
     const { signUp } = useLogin();
- const navigator = useNavigate();  
+    const navigate = useNavigate();  
 
     const handleSignUp = async () => {
       if (!username) {
@@ -123,7 +123,7 @@ const SignUp = () =>  {
             </Button>
             <Grid container justifyContent="space-evenly">
               <Grid item>
-                <Link onClick={() => navigator.push('/login')} color="secondary" variant="body2">
+                <Link onClick={() => navigate('/login')} color="secondary" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

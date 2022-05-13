@@ -12,7 +12,7 @@ import { Switch } from '@mui/material';
 import NavMenu from './NavMenu';
 
 const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { user, logout } = useLogin();
     
   return (
@@ -24,7 +24,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            onClick={() => navigator.push('')}
+            onClick={() => navigate('')}
           >
             Bilco Industries
           </Typography>
@@ -47,7 +47,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
                   <Button
                     onClick={() => {
                       logout();
-                      navigator.push('/login');
+                      navigate('/login');
                     }} 
                     variant="text"
                     color="secondary"
@@ -58,7 +58,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
               </>
             :
               <Button
-                onClick={() => navigator.push('/login')} 
+                onClick={() => navigate('/login')} 
                 variant="text"
                 color="secondary"
               >

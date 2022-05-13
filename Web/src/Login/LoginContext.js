@@ -7,7 +7,7 @@ const LoginContext = createContext(null);
 export const LoginProvider = ({ children }) => {
     const [user, setUser] = useState({});
     const [isAuthenticated, setIsAuthenticated] = useState();
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     const { appConfig : { connectionStrings: { API } }, cookies } = useConfig();   
 
@@ -53,7 +53,7 @@ export const LoginProvider = ({ children }) => {
         setUser(null);
         setIsAuthenticated(false);
         document.cookie = "token=";
-        navigator.push("/login")
+        navigate("/login")
     };
 
     useEffect(() => {
@@ -78,7 +78,7 @@ export const LoginProvider = ({ children }) => {
                 setUser(null);
                 setIsAuthenticated(false);
                 document.cookie = "token=";
-                navigator.push("/login")
+                navigate("/login")
             }
         }
 
@@ -86,7 +86,7 @@ export const LoginProvider = ({ children }) => {
         return () => {
             cancel= true;
         }
-    }, [API, cookies.token, isAuthenticated, navigator, user])
+    }, [API, cookies.token, isAuthenticated, navigate, user])
      
     return (
         <LoginContext.Provider value={{ login, signUp, logout, user, isAuthenticated }}>

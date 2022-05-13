@@ -20,7 +20,7 @@ const Login = () => {
     const [remember, setRemember] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const { login } = useLogin();
- const navigator = useNavigate();
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         if (!username) {
@@ -35,7 +35,7 @@ const Login = () => {
 
         const response = await login(username, password, remember);
         if (response.status === 200) {
-            navigator.push('/roadtrip');
+            navigate('/roadtrip');
         }
 
         setErrorMessage("Username or password is incorrect")
@@ -105,7 +105,7 @@ const Login = () => {
                     </Button>
                     <Grid container justifyContent="space-evenly">
                         <Grid item>
-                            <Link onClick={() => navigator.push('/signup')} color="secondary" variant="body2">
+                            <Link onClick={() => navigate('/signup')} color="secondary" variant="body2">
                                 Don't have an account yet? Sign up here
                             </Link>
                         </Grid>

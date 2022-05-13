@@ -8,12 +8,12 @@ import { useConfig } from "../Config/ConfigContext";
 
 const NavMenu = () => {
     const { user } = useLogin();
-    const navigator = useNavigate();
+    const navigate = useNavigate();
     const { appConfig: { pages }} = useConfig()
     const [casinoMenuElement, setCasinoMenuElement] = useState(null);
     const [burgerMenuAnchor, setBurgerMenuAnchor] = useState(null);
-    const NavButton = ({title, path, logged}) => logged && !user ? null : <Button color="secondary" key={title} onClick={() => navigator.push(path)}>{title}</Button>
-    const MenuButton = ({title, path, logged}) => logged && !user ? null : <MenuItem color="secondary" key={title} onClick={() => navigator.push(path)}>{title}</MenuItem>
+    const NavButton = ({title, path, logged}) => logged && !user ? null : <Button color="secondary" key={title} onClick={() => navigate(path)}>{title}</Button>
+    const MenuButton = ({title, path, logged}) => logged && !user ? null : <MenuItem color="secondary" key={title} onClick={() => navigate(path)}>{title}</MenuItem>
 
     return (
         <>

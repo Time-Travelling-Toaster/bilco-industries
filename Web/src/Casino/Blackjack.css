@@ -1,0 +1,50 @@
+.playerOne {
+    text-align:center;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 64px);
+    justify-content: space-evenly;
+    right: 0;
+    bottom: 0
+}
+
+.playerTwo {
+    text-align:center;
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 100%;
+    bottom: 0;
+}
+
+.playerThree {
+    text-align:center;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: calc(100% - 64px);
+    left: 0;
+    bottom: 0
+}
+
+.dealer {
+    text-align:center;
+    position: absolute;
+    width: 100%;
+    top: 64;
+
+}
+
+.table {
+    background-color: darkslategrey; 
+    width: 100%;
+    height: calc(100% - 64px);
+}
+
+.card {
+    height: 14vh;
+    /* width: 5vw; */
+}

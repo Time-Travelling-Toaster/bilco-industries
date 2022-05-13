@@ -1,0 +1,8 @@
+.roadtrip {
+    display: flex;
+    justify-content: center;
+}
+
+.tripContainer {
+    width: 80%;
+}

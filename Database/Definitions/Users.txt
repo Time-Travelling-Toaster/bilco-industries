@@ -1,0 +1,5 @@
+Id (PK)
+UserName [STRING NOT NULL]
+PasswordHash [STRING NOT NULL]
+Token [STRING]
+TokenExpiry [DATETIME]

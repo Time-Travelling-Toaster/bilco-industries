@@ -1,0 +1,4 @@
+PK 
+RoadTripId [INT NOT NULL] [LINKS TO ROADTRIP]
+Date [DATETIME]
+Location [STRING]

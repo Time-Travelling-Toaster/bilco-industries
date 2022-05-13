@@ -103,7 +103,7 @@ const RoadtripPlanner = () => {
 
     const loadStops = async (roadTripId) => {
         const roadTrip = trips.find(({ Id }) => Id === roadTripId);
-        if (!roadTripId || !roadTrip || roadTrip.stops) return;
+        if (!roadTripId || !roadTrip || roadTrip.Stops) return;
 
         const response = await fetch(API + "/roadtrip/stops/get", {
             method: "POST", 

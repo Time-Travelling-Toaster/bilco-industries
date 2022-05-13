@@ -26,3 +26,5 @@ yarn-error.log*
 
 */src/AppSettings.production.json
 */src/Appsettings.development.json
+API/Appsettings.development.json
+API/Appsettings.production.json

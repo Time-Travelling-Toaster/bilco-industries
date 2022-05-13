@@ -58,7 +58,7 @@ export const LoginProvider = ({ children }) => {
 
     useEffect(() => {
         let cancel = false;
-        if ((isAuthenticated && !!Object.keys(user).length === 0 ) || cancel)  return;
+        if ((isAuthenticated && Object.keys(user).length !== 0 ) || !cookies.token || cancel)  return;
 
         const load =  async() => {
             const response = await fetch(API + "/token", { 

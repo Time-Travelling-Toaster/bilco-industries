@@ -1,17 +1,17 @@
 import express from "express";
+import fs from "fs"
 import { read, writeStream } from "./DAL/FileHandler.js";
 import { checkToken, login, signUp } from "./Controllers/LoginController.js";
 import { addStop, addTrip, deleteStop, editStop, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
 import cors from "cors";
 const bilco = express();
-const port = 1337;
 
-bilco.use(cors({
-    origin: [
-        'http://bilcoindustries.asuscomm.com',
-        'http://bilco-industries.co.uk'
-    ]
-}));
+const environment = process.env.REACT_APP_ENVIRONMENT;
+const appConfig =JSON.parse(fs.readFileSync(`./Appsettings.${environment === "production" ? "production" : "development"}.json`));
+
+const { port, allowedRoutes } = appConfig;
+
+bilco.use(cors({ origin: allowedRoutes }));
 
 bilco.use(express.json());
 

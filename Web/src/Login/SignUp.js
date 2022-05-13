@@ -38,10 +38,12 @@ const SignUp = () =>  {
 
       setErrorMessage("")
       const response = await signUp(username, password);
-      console.log(response)
       if (response.status !== 201) {
         setErrorMessage("Sorry, that username is already taken")
+        return;
       }
+
+      navigate("/roadtrip")
     }
 
     return (

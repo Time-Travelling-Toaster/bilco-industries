@@ -7,7 +7,10 @@ const bilco = express();
 const port = 1337;
 
 bilco.use(cors({
-    origin: [`bilcoindustries.asuscomm.com:${port}`, `bilco-industries.co.uk:${port}`, `localhost:${port}`, `192.127.0.1:${port}`]
+    origin: [
+        'http://bilcoindustries.asuscomm.com',
+        'http://bilco-industries.co.uk'
+    ]
 }));
 
 bilco.use(express.json());

@@ -1,16 +1,16 @@
-import express, {request, response} from "express";
+import express from "express";
 import { read, writeStream } from "./DAL/FileHandler.js";
 import { checkToken, login, signUp } from "./Controllers/LoginController.js";
-import { BadRequest } from "./Helpers/ResponseHelper.js";
 import { addStop, addTrip, deleteStop, editStop, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
 import cors from "cors";
 const bilco = express();
 const port = 1337;
 
-bilco.use(express.json());
 bilco.use(cors({
-    origin: ["bilcoindustries.asuscomm.com", '*']
+    origin: ["bilcoindustries.asuscomm.com", 'bilco-industries.co.uk', "localhost", "192.127.0.1"]
 }));
+
+bilco.use(express.json());
 
 bilco.get('/', (req, res) => {
     res.send("API is up")

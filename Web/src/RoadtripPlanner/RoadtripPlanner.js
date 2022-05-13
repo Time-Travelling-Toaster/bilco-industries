@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { useLogin } from "../Login/LoginContext";
 import { Box } from "@mui/system";
 import { useConfig } from "../Config/ConfigContext";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import moment from "moment";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteModal from "./DeleteModal";
 import RoadTripModal from "./RoadTripModal";
 import EditStopModal from "./EditStopModal";
+import RoadTripStop from "./RoadTripStop";
+import RoadTrip from "./RoadTrip";
 
 const RoadtripPlanner = () => {
     const { isAuthenticated, user: { userId } } = useLogin();
@@ -101,25 +99,6 @@ const RoadtripPlanner = () => {
         setStopModalIsOpen(false);
     };
 
-    const loadStops = async (roadTripId) => {
-        const roadTrip = trips.find(({ Id }) => Id === roadTripId);
-        if (!roadTripId || !roadTrip || roadTrip.Stops) return;
-
-        const response = await fetch(API + "/roadtrip/stops/get", {
-            method: "POST", 
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({ userId, roadTripId })
-        });
-
-        const data = await response.json();
-        setTrips(t => ([
-            ...t.filter(trip => trip.Id !== roadTripId),
-            { ...roadTrip, Stops: data }
-        ]));
-    }
-
     const deleteStop = async () => {
         const response = await fetch(API + "/roadtrip/stops/delete", {
             method: "POST", 
@@ -209,7 +188,7 @@ const RoadtripPlanner = () => {
                 setStopDetails={setStopDetails}
                 stopId={selectedStop}
                 saveCallback={async () => {
-                    if (selectedStop) await editStop()
+                    if (selectedStop) await editStop();
                     else await addStop();
                     setTripDate("")
                     setTripName("")
@@ -224,88 +203,28 @@ const RoadtripPlanner = () => {
                 display="flex"
                 flexDirection="column"
             >   
-                {trips.map(({ Id, Name, StartDate, Stops }) => 
-                    <Accordion 
-                        sx={{ color: "secondary.main", borderColor: "secondary.main" }} 
-                        key={Id} 
-                        expanded={expandedTrip === Id} 
-                        onChange={() => setExpandedTrip(expanded => expanded === Id ? 0 : Id)}
-                    >
-                        <AccordionSummary 
-                            sx={{ backgroundColor: "primary.main" }} 
-                            key={Id}
-                            color="secondary" 
-                            expandIcon={<ExpandMore />} onClick={() => loadStops(Id)} 
-                        >
-                            <Typography 
-                                sx={{ width: '33%', flexShrink: 0, textTransform: "capitalize" }}
-                            >
-                                <strong>{Name}</strong>
-                            </Typography>  
-                            <Typography
-                                sx={{ width: '33%', flexShrink: 0, textTransform: "capitalize" }}
-                            >
-                                { moment(StartDate).format("DD/MM/YYYY") }
-                            </Typography>
-                            <Typography 
-                                sx={{ width: '33%', textAlign: "right" }}
-                            >
-                                <EditIcon />
-                                <DeleteForeverIcon />
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails 
-                            sx={{ backgroundColor: "primary.main" }}
-                            color="secondary"
-                        >
-                            { Stops && 
-                                Stops.map(({Id: stopId, Location, Date: stopDate, Details}) => 
-                                    <Box 
-                                        sx={{ display: "flex", flexDirection: "row", border: "solid 3px secondary" }}
-                                        key={stopId}
-                                        onClick={() => openStop(stopId, Location, stopDate, Details, true)}
-                                    >
-                                        <Typography 
-                                            sx={{ width: '33%', flexShrink: 0, textTransform: "capitalize" }}
-                                        >
-                                            <strong>{Location}</strong>
-                                        </Typography>  
-                                        <Typography 
-                                            sx={{ width: '33%', flexShrink: 0, textTransform: "capitalize" }}
-                                        >
-                                            { moment(stopDate).format("DD/MM/YYYY") }
-                                        </Typography>
-                                        <Typography 
-                                            sx={{ width: '33%', letterSpacing: "5px", textAlign: "right" }}
-                                        >
-                                            <EditIcon />
-                                            <DeleteForeverIcon 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedStop(stopId);
-                                                    setDeleteStopModalIsOpen(true);
-                                                }} 
-                                            />
-                                        </Typography>
-                                    </Box>
-                                )
-                            }
-                            <Button
-                                fullWidth
-                                color="secondary"
-                                variant="contained"
-                                onClick={() => {
-                                    setStopDate("")
-                                    setStopLocation("")
-                                    setStopDetails("")
-                                    setSelectedStop("")
-                                    setStopModalIsOpen(true);
-                                }}
-                            >
-                                Add Stop
-                            </Button>
-                        </AccordionDetails>
-                    </Accordion>
+                {trips.map((trip) => 
+                    <RoadTrip
+                        key={trip.Id}
+                        {...trip}
+                        trips={trips}
+                        setTrips={setTrips}
+                        expandedTrip={expandedTrip}
+                        setExpandedTrip={setExpandedTrip}
+                        clearStop={() => {
+                            setStopDate("")
+                            setStopLocation("")
+                            setStopDetails("")
+                            setSelectedStop("")
+                            setStopModalIsOpen(true);
+                        }}
+                        RoadTripStopComponent={(props) => <RoadTripStop 
+                            {...props}
+                            setSelectedStop={setSelectedStop} 
+                            setDeleteStopModalIsOpen={setDeleteStopModalIsOpen} 
+                            openStop={openStop}
+                        />}
+                    />
                 )}
                 <Button
                     disabled={!isAuthenticated}

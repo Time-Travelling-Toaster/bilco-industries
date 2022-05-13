@@ -50,7 +50,7 @@ export const LoginProvider = ({ children }) => {
     }
 
     const logout = () => {
-        setUser(null);
+        setUser({});
         setIsAuthenticated(false);
         document.cookie = "token=";
         navigate("/login")
@@ -75,7 +75,7 @@ export const LoginProvider = ({ children }) => {
                 setIsAuthenticated(true);        
                 
             } else {
-                setUser(null);
+                setUser({});
                 setIsAuthenticated(false);
                 document.cookie = "token=";
                 navigate("/login")

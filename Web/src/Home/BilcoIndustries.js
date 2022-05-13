@@ -17,6 +17,7 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
+import Home from './Home';
 
 const BilcoIndustries = () => {
     const cookies = document.cookie.split(";").reduce((reducer, cookie) => {
@@ -51,13 +52,13 @@ const BilcoIndustries = () => {
                                 <LoginProvider>
                                     <HeaderBar isLightTheme={isLightTheme} setIsLightTheme={setIsLightTheme} />
                                     <Routes>
-                                        <Route path="/casino/slot-machine" element={<SlotMachine />} />
-                                        <Route path="/casino/black-jack" element={<Blackjack />} />
-                                        <Route path="/sweepstake" element={<Sweepstake />} />
-                                        <Route path="/roadtrip" element={<RoadtripPlanner />} />
-                                        <Route path="/signup" element={<SignUp />} />
-                                        <Route path="/login" element={<Login />} />
-                                        <Route path="/" element={<Login />} />
+                                        <Route path="casino/slot-machine" element={<SlotMachine />} />
+                                        <Route path="casino/black-jack" element={<Blackjack />} />
+                                        <Route path="sweepstake" element={<Sweepstake />} />
+                                        <Route path="roadtrip" element={<RoadtripPlanner />} />
+                                        <Route path="signup" element={<SignUp />} />
+                                        <Route path="login" element={<Login />} />
+                                        <Route path="/" element={<Home />} />
                                     </Routes>
                                 </LoginProvider>
                             </CssBaseline>

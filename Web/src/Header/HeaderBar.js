@@ -24,7 +24,7 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            onClick={() => navigate('')}
+            onClick={() => navigate('/')}
           >
             Bilco Industries
           </Typography>

@@ -52,7 +52,7 @@ export const run = async (query, params) => {
         if (!connection) return false;
 
         const response = await connection.run(query, params);
-
+        
         return response;
     } catch(e) {
         console.log("Error while running query on sqlite" + e)

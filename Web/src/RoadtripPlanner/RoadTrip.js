@@ -17,10 +17,13 @@ const RoadTrip = ({
     expandedTrip, 
     setExpandedTrip,
     clearStop,
-    RoadTripStopComponent 
+    RoadTripStopComponent,
+    setDeleteModalIsOpen,
+    openTrip
 }) => {
     const { user: { userId } } = useLogin();
     const { appConfig : { connectionStrings: { API } } } = useConfig();   
+    const sortTrips = (trips) => trips.sort((trip, prevTrip) => trip.Id - prevTrip.Id)
 
     const loadStops = async (roadTripId) => {
         const roadTrip = trips.find(({ Id }) => Id === roadTripId);
@@ -35,7 +38,7 @@ const RoadTrip = ({
         });
 
         const data = await response.json();
-        setTrips(t => ([
+        setTrips(t => sortTrips([
             ...t.filter(trip => trip.Id !== roadTripId),
             { ...roadTrip, Stops: data }
         ]));
@@ -67,8 +70,15 @@ const RoadTrip = ({
                 <Typography 
                     sx={{ width: '33%', textAlign: "right" }}
                 >
-                    <EditIcon />
-                    <DeleteForeverIcon />
+                    <EditIcon onClick={e => {
+                        e.stopPropagation();
+                        openTrip(Id, Name, StartDate)
+                    }}/>
+                    <DeleteForeverIcon onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedTrip(Id)
+                        setDeleteModalIsOpen(true)
+                    }}/>
                 </Typography>
             </AccordionSummary>
             <AccordionDetails 

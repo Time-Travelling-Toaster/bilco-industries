@@ -1,10 +1,25 @@
 import { all, get, run } from "./SqlLite.js"
 
 export const getRoadTripById = async (userId, roadTripId) => 
-    await get("SELECT Id FROM roadtrip WHERE UserId = ? AND Id = ?", [userId, roadTripId]);
+    await get("SELECT Id FROM RoadTrip WHERE UserId = ? AND Id = ?", [userId, roadTripId]);
 
 export const addRoadTrip = async (userId, date, name) => 
-    await run("INSERT INTO roadtrip (UserId, Name, StartDate) VALUES (?, ?, ?);", [userId, name, date]);
+    await run("INSERT INTO RoadTrip (UserId, Name, StartDate) VALUES (?, ?, ?);", [userId, name, date]);
+
+export const editRoadTrip = async (name, date, id) => 
+    await run(`
+        UPDATE 
+            RoadTrip 
+        SET 
+            Name = ?, 
+            StartDate = ? 
+        WHERE 
+            Id = ?`,
+        [name, date, id]
+    );
+
+export const deleteRoadTrip = async (id) => 
+    await run("DELETE FROM RoadTrip WHERE Id = ?", id);
 
 export const loadRoadTrips = async (userId) => 
     await all("SELECT Id, Name, StartDate FROM roadtrip WHERE UserId=?", userId)

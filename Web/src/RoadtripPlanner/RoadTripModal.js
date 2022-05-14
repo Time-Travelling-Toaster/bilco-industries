@@ -4,10 +4,11 @@ import ModalPopup from "../Modal/ModalPopup";
 import { MobileDatePicker } from '@mui/x-date-pickers';
 import { Box } from "@mui/system";
 
-const RoadTripModal = ({isOpen, setIsOpen, tripName, setTripName, tripDate, setTripDate, saveCallback}) =>             
+const RoadTripModal = ({isOpen, setIsOpen, tripName, setTripName, tripDate, setTripDate, saveCallback, tripId, clearTrip}) =>             
     <ModalPopup
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        clearData={clearTrip}
     >
       <Box sx={{ textAlign: "center" }}>
             <Typography 
@@ -15,7 +16,7 @@ const RoadTripModal = ({isOpen, setIsOpen, tripName, setTripName, tripDate, setT
                 variant="h4"
                 component="h2"
             >
-                Create a trip
+                {tripId ? "Edit" : "Create"} a trip
             </Typography>
             <Grid container spacing={2}>
                 <Grid item >
@@ -38,6 +39,8 @@ const RoadTripModal = ({isOpen, setIsOpen, tripName, setTripName, tripDate, setT
                         onChange={setTripDate}
                         renderInput={(params) =>
                             <TextField 
+                                color="secondary"
+                                margin="normal"
                                 fullWidth
                                 {...params}  
                             />

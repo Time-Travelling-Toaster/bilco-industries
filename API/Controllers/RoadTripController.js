@@ -1,4 +1,4 @@
-import { addRoadTrip, addRoadTripStop, deleteRoadTripStop, editRoadTripStop, getRoadTripById, getRoadTripStopsByRoadTripId, loadRoadTrips } from "../DAL/RoadTripDal.js";
+import { addRoadTrip, addRoadTripStop, deleteRoadTrip, deleteRoadTripStop, editRoadTrip, editRoadTripStop, getRoadTripById, getRoadTripStopsByRoadTripId, loadRoadTrips } from "../DAL/RoadTripDal.js";
 import { getUserById } from "../DAL/UserDal.js";
 import { Created, OK, Unauthorised, BadRequest} from "../Helpers/ResponseHelper.js";
 
@@ -23,6 +23,51 @@ export const addTrip = async (req, res) => {
 
     Created(res);
     res.send({ tripId: response.lastID });
+}
+
+export const editTrip = async (req, res) => {
+    const { body: { date, name, userId, tripId } } = req;
+    
+    if (!date || !name || !userId || !tripId) {
+        BadRequest(res);
+        res.send();
+        return;
+    };
+
+    const user = await getUserById(userId);
+    
+    if (!user?.UserName) {
+        Unauthorised(res);
+        res.send();
+        return;
+    };
+
+    await editRoadTrip(name, date, tripId);
+
+    OK(res);
+    res.send();
+}
+
+export const deleteTrip = async (req, res) => {
+    const { body: { userId, tripId } } = req;
+    
+    if (!userId  || !tripId) {
+        BadRequest(res);
+        res.send();
+        return;
+    };
+
+    const trip = await getRoadTripById(userId, tripId);
+    
+    if (trip?.id) {
+        Unauthorised(res);
+        res.send();
+        return;
+    };
+
+    await deleteRoadTrip(tripId);
+    OK(res);
+    res.send();
 }
 
 export const loadTrips = async (req, res) => {
@@ -74,7 +119,7 @@ export const addStop = async (req, res) => {
 export const editStop = async (req, res) => {
     const { body: { date, location, details, userId, roadTripId, stopId } } = req;
 
-    if (!date && !location || !userId || !details || !roadTripId || !stopId) {
+    if (!date || !location || !userId || !details || !roadTripId || !stopId) {
         BadRequest(res);
         res.send();
         return;
@@ -117,7 +162,6 @@ export const loadStopsforTrip = async (req, res) => {
 }
 
 export const deleteStop = async (req, res) => {
-    // const { body: { userId, roadTripId, stopId } } = req;
     const { body: { userId, roadTripId, stopId } } = req;
     
     if (!userId  || !roadTripId || !stopId) {

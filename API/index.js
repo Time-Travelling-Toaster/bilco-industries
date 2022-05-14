@@ -2,7 +2,7 @@ import express from "express";
 import fs from "fs"
 import { read, writeStream } from "./DAL/FileHandler.js";
 import { checkToken, login, signUp } from "./Controllers/LoginController.js";
-import { addStop, addTrip, deleteStop, editStop, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
+import { addStop, addTrip, deleteStop, deleteTrip, editStop, editTrip, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
 import cors from "cors";
 const bilco = express();
 
@@ -41,7 +41,11 @@ bilco.put('/file/:name', async (req, res) => {
 
 bilco.post('/roadtrip/add', addTrip)
 
+bilco.post('/roadtrip/edit', editTrip)
+
 bilco.post('/roadtrip/all', loadTrips);
+
+bilco.post('/roadtrip/delete', deleteTrip);
 
 bilco.post('/roadtrip/stops/add', addStop);
 

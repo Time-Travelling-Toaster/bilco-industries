@@ -16,7 +16,6 @@ const ModalPopup = ({isOpen, setIsOpen, children, clearData}) => (
     <Dialog
         open={isOpen}
         onClose={() => {
-            console.log(!!clearData)
             if (clearData) clearData();
             setIsOpen(false);
         }}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { useLogin } from "../Login/LoginContext";
 import { Box } from "@mui/system";
@@ -29,13 +29,69 @@ const RoadtripPlanner = () => {
     const [stopDetails, setStopDetails] = useState("");
     const [selectedStop, setSelectedStop] = useState();
 
-    const addTrip = async () => await fetch(API + "/roadtrip/add", {
-        method: "POST", 
-        headers: {
-            "content-type": "application/json"
-        },
-        body: JSON.stringify({name: tripName, date: new Date(tripDate).toUTCString(), userId })
-    });
+    const sortTrips = useCallback((trips) => trips.sort((trip, prevTrip) => trip.Id - prevTrip.Id), [])
+
+    const addTrip = async () => {
+        const response = await fetch(API + "/roadtrip/add", {
+            method: "POST", 
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({name: tripName, date: new Date(tripDate).toUTCString(), userId })
+        });
+
+        if (response.ok) {
+            const { tripId } = await response.json();
+            setTrips(t => sortTrips([
+                ...t, 
+                {
+                    Id: tripId,
+                    Name: tripName,
+                    Date: tripDate,
+                }
+            ]))
+        }
+    }
+
+    const deleteTrip = async () => {
+        const response = await fetch(API + "/roadtrip/delete", {
+            method: "POST", 
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ tripId: expandedTrip, userId })
+        });
+
+        if (response.ok) {
+            setTrips(t => sortTrips(t.filter(trip => trip.Id !== expandedTrip)))
+        }
+    }
+
+    const editTrip = async () => {
+        const response = await fetch(API + "/roadtrip/edit", {
+            method: "POST", 
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({name: tripName, date: tripDate, userId, tripId: expandedTrip })
+        });
+
+        if (response.ok) {
+            const roadTrip = {
+                Name: tripName, StartDate: tripDate.toString(), Id: expandedTrip
+            }
+
+            setTrips(t => sortTrips([
+                ...t.filter(trip => trip.Id !== expandedTrip),
+                roadTrip
+            ]));
+            console.log(trips)
+            console.log(roadTrip)
+        }
+
+        setSelectedStop(null);
+        setStopModalIsOpen(false);
+    };
 
     const editStop = async () => {
         const response = await fetch(API + "/roadtrip/stops/edit", {
@@ -43,14 +99,14 @@ const RoadtripPlanner = () => {
             headers: {
                 "content-type": "application/json"
             },
-            body: JSON.stringify({location: stopLocation, date: new Date(stopDate).toUTCString(), userId, roadTripId: expandedTrip, details: stopDetails, stopId: selectedStop })
+            body: JSON.stringify({location: stopLocation, date: stopDate, userId, roadTripId: expandedTrip, details: stopDetails, stopId: selectedStop })
         });
 
         if (response.ok) {
             const roadTrip = trips.find(({ Id }) => Id === expandedTrip)
             const { Stops } = roadTrip;
-            console.log(Stops.filter(stop => stop.Id !== selectedStop));
-            setTrips(t => ([
+
+            setTrips(t => sortTrips([
                 ...t.filter(trip => trip.Id !== expandedTrip),
                 { ...roadTrip, Stops: [ 
                     ...Stops.filter(stop => stop.Id !== selectedStop),
@@ -82,7 +138,7 @@ const RoadtripPlanner = () => {
             const roadTrip = trips.find(({ Id }) => Id === expandedTrip)
             const { Stops } = roadTrip;
 
-            setTrips(t => ([
+            setTrips(t => sortTrips([
                 ...t.filter(trip => trip.Id !== expandedTrip),
                 { ...roadTrip, Stops: [ 
                     ...Stops,
@@ -112,7 +168,7 @@ const RoadtripPlanner = () => {
             const roadTrip = trips.find(({ Id }) => Id === expandedTrip)
             const { Stops } = roadTrip;
 
-            setTrips(t => ([
+            setTrips(t => sortTrips([
                 ...t.filter(trip => trip.Id !== expandedTrip),
                 { ...roadTrip, Stops: Stops.filter(stop => stop.Id !== selectedStop) }
             ]))
@@ -121,14 +177,6 @@ const RoadtripPlanner = () => {
         setSelectedStop(null);
         setDeleteStopModalIsOpen(false);
     };
-
-    const openStop = (stopId, location, date, details) => {
-        setStopLocation(location);
-        setStopDate(date);
-        setSelectedStop(stopId);
-        setStopDetails(details)
-        setStopModalIsOpen(true);
-    }
 
     useEffect(() => {
         let cancel = false;
@@ -142,21 +190,24 @@ const RoadtripPlanner = () => {
                 },
                 body: JSON.stringify({ userId })
             });
-
-            setTrips(await response.json());
+            const x = await response.json();
+            console.log(sortTrips(x))
+            console.log(x)
+            setTrips(sortTrips(x));
         }
         load();
 
         return () => {
             cancel = true;
         }
-    }, [API, userId]);
+    }, [API, sortTrips, userId]);
 
     return (
         <Box style={{ display:"flex", justifyContent: "center" }}>
             <DeleteModal
                 isOpen={deleteTripModalIsOpen}
                 setIsOpen={setDeleteTripModalIsOpen}
+                confirmCallback={deleteTrip}
             />
             <DeleteModal
                 isOpen={deleteStopModalIsOpen}
@@ -170,11 +221,17 @@ const RoadtripPlanner = () => {
                 setTripDate={setTripDate}
                 tripName={tripName}
                 setTripName={setTripName}
+                tripId={expandedTrip}
                 saveCallback={async () => {
-                    await addTrip();
+                    if (expandedTrip === 0) await addTrip();
+                    else await editTrip();
                     setTripDate("")
                     setTripName("")
                     setTripModalIsOpen(false);
+                }}
+                clearTrip={() => {
+                    setTripDate("");
+                    setTripName("");
                 }}
             />   
             <EditStopModal 
@@ -218,17 +275,33 @@ const RoadtripPlanner = () => {
                             setSelectedStop("")
                             setStopModalIsOpen(true);
                         }}
+                        openTrip={(tripId, name, date) => {
+                            setTripName(name)
+                            setTripDate(date);
+                            setExpandedTrip(tripId)
+                            setTripModalIsOpen(true);
+                        }}
+                        setDeleteModalIsOpen={setDeleteTripModalIsOpen}
                         RoadTripStopComponent={(props) => <RoadTripStop 
                             {...props}
                             setSelectedStop={setSelectedStop} 
                             setDeleteStopModalIsOpen={setDeleteStopModalIsOpen} 
-                            openStop={openStop}
+                            openStop={(stopId, location, date, details) => {
+                                setStopLocation(location);
+                                setStopDate(date);
+                                setSelectedStop(stopId);
+                                setStopDetails(details)
+                                setStopModalIsOpen(true);
+                            }}
                         />}
                     />
                 )}
                 <Button
                     disabled={!isAuthenticated}
-                    onClick={() => setTripModalIsOpen(true)}
+                    onClick={() => {
+                        setExpandedTrip(0)
+                        setTripModalIsOpen(true)
+                    }}
                     variant="contained"
                     sx={{ mt: "1vh"}}
                 >

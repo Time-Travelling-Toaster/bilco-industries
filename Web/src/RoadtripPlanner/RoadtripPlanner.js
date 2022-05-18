@@ -14,7 +14,7 @@ const RoadtripPlanner = () => {
     const { isAuthenticated, user: { userId } } = useLogin();
     const { appConfig : { connectionStrings: { API } } } = useConfig();   
 
-    const [showMine, setShowMine] = useState(isAuthenticated);
+    const [showMine, setShowMine] = useState(isAuthenticated || false);
 
     const [trips, setTrips] = useState([]);
     const [sharedTrips, setSharedTrips] = useState([]);

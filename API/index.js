@@ -1,8 +1,8 @@
 import express from "express";
 import fs from "fs"
 import { read, writeStream } from "./DAL/FileHandler.js";
-import { checkToken, login, signUp } from "./Controllers/LoginController.js";
-import { addStop, addTrip, deleteStop, deleteTrip, editStop, editTrip, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
+import { checkToken, loadUsers, login, signUp } from "./Controllers/LoginController.js";
+import { addShare, addStop, addTrip, deleteShare, deleteStop, deleteTrip, editStop, editTrip, loadSharedRoadTrips, loadShares, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
 import cors from "cors";
 const bilco = express();
 
@@ -47,6 +47,8 @@ bilco.post('/roadtrip/all', loadTrips);
 
 bilco.post('/roadtrip/delete', deleteTrip);
 
+bilco.post('/roadtrip/shared', loadSharedRoadTrips);
+
 bilco.post('/roadtrip/stops/add', addStop);
 
 bilco.post('/roadtrip/stops/edit', editStop);
@@ -54,6 +56,13 @@ bilco.post('/roadtrip/stops/edit', editStop);
 bilco.post('/roadtrip/stops/get', loadStopsforTrip);
 
 bilco.post('/roadtrip/stops/delete', deleteStop);
+
+bilco.post('/roadtrip/share/add', addShare);
+
+bilco.post('/roadtrip/share/get', loadShares);
+
+bilco.post('/roadtrip/share/delete', deleteShare);
+
 
 //////////////////////////////////////////////////
 // Login API
@@ -63,6 +72,8 @@ bilco.post('/login', login);
 bilco.post('/signup', signUp);
 
 bilco.post('/token', checkToken)
+
+bilco.post('/users/get', loadUsers)
 
 //////////////////////////////////////////////////
 // COUCH DB API

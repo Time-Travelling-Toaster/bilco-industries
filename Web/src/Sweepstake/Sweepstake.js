@@ -68,7 +68,6 @@ const Sweepstake = () => {
     
     load();
     let interval;
-    console.log(1000 * settings.updateInterval)
     if (settings.updateInterval !== 0) {
       interval = setInterval(load, (settings.updateInterval * 1000));
     }
@@ -101,7 +100,6 @@ const Sweepstake = () => {
     
     const partResponse = await couchSave(participant);
     const { rev } = await partResponse.json();
-    console.log(rev)
     participant._rev = rev;
 
     setParticipants([...participants]);
@@ -126,7 +124,6 @@ const Sweepstake = () => {
     
     const partResponse = await couchSave(participant);
     const { rev } = await partResponse.json();
-    console.log(rev)
     participant._rev = rev;
 
     participants[winnerIndex] = participant;

@@ -1,12 +1,11 @@
-import React  from "react";
+import React, { memo }  from "react";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import moment from "moment";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const RoadTripStop = ({ Id, Location, Date, Details, setSelectedStop, setDeleteStopModalIsOpen, openStop }) => {
-    return (
+const RoadTripStop = ({ Id, Location, Date, Details, setSelectedStop, setDeleteStopModalIsOpen, openStop, editable }) => (
         <Box 
             sx={{ display: "flex", flexDirection: "row", border: "solid 3px secondary" }}
             key={Id}
@@ -22,9 +21,10 @@ const RoadTripStop = ({ Id, Location, Date, Details, setSelectedStop, setDeleteS
             >
                 { moment(Date).format("DD/MM/YYYY") }
             </Typography>
-            <Typography 
-                sx={{ width: '33%', letterSpacing: "5px", textAlign: "right" }}
-            >
+            {editable && 
+                <Typography 
+                    sx={{ width: '33%', letterSpacing: "5px", textAlign: "right" }}
+                >
                 <EditIcon />
                 <DeleteForeverIcon 
                     onClick={(e) => {
@@ -33,10 +33,9 @@ const RoadTripStop = ({ Id, Location, Date, Details, setSelectedStop, setDeleteS
                         setDeleteStopModalIsOpen(true);
                     }} 
                 />
-            </Typography>
+                </Typography>
+            }   
         </Box>
     )
-    
-}
 
-export default RoadTripStop;
+export default memo(RoadTripStop);

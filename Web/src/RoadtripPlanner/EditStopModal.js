@@ -6,6 +6,7 @@ import './Roadtrip.css';
 import { Box } from "@mui/system";
 
 const EditStopModal = ({
+        editable,
         isOpen, 
         setIsOpen, 
         stopLocation, 
@@ -64,7 +65,7 @@ const EditStopModal = ({
                             variant="h4"
                             component="h2"
                         >
-                            { !!stopId ? "Edit" : "Add" } stop
+                            { !editable ? "View" : !!stopId ? "Edit" : "Add" } stop
                         </Typography>
                         <Grid container spacing={2}>
                             <Grid item >
@@ -113,14 +114,25 @@ const EditStopModal = ({
                                 >
                                     details
                                 </Button>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    sx={{ mt: 3, mb: 2 }}
-                                    onClick={saveCallback}
-                                >
-                                    Save
-                                </Button>
+                                { editable ?
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{ mt: 3, mb: 2 }}
+                                        onClick={saveCallback}
+                                    >
+                                        Save
+                                    </Button> 
+                                    :
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{ mt: 3, mb: 2 }}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        Close
+                                    </Button> 
+                                }
                             </Grid>
                         </Grid>
                     </Box>

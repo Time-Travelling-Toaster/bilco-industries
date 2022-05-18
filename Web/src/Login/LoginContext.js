@@ -53,7 +53,8 @@ export const LoginProvider = ({ children }) => {
         setUser({});
         setIsAuthenticated(false);
         document.cookie = "token=";
-        navigate("/login")
+        navigate("/login");
+        window.reload();
     };
 
     useEffect(() => {
@@ -73,7 +74,6 @@ export const LoginProvider = ({ children }) => {
                 const { userId, username } = await response.json();
                 setUser({ username, userId })
                 setIsAuthenticated(true);        
-                
             } else {
                 setUser({});
                 setIsAuthenticated(false);

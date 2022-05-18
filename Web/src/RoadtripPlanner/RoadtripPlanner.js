@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useLogin } from "../Login/LoginContext";
 import { Box } from "@mui/system";
 import { useConfig } from "../Config/ConfigContext";
@@ -8,17 +8,23 @@ import RoadTripModal from "./RoadTripModal";
 import EditStopModal from "./EditStopModal";
 import RoadTripStop from "./RoadTripStop";
 import RoadTrip from "./RoadTrip";
+import RoadTripShareModal from "./RoadTripShareModal";
 
 const RoadtripPlanner = () => {
     const { isAuthenticated, user: { userId } } = useLogin();
     const { appConfig : { connectionStrings: { API } } } = useConfig();   
+
+    const [showMine, setShowMine] = useState(isAuthenticated);
+
     const [trips, setTrips] = useState([]);
+    const [sharedTrips, setSharedTrips] = useState([]);
 
     const [tripModalIsOpen, setTripModalIsOpen] = useState(false);
     const [deleteTripModalIsOpen, setDeleteTripModalIsOpen] = useState(false)
 
     const [deleteStopModalIsOpen, setDeleteStopModalIsOpen] = useState(false)
     const [stopModalIsOpen, setStopModalIsOpen] = useState(false);
+    const [shareModalIsOpen, setShareModalIsOpen] = useState(false)
     const [expandedTrip, setExpandedTrip] = useState(0);
 
     const [tripName, setTripName] = useState("");
@@ -28,6 +34,8 @@ const RoadtripPlanner = () => {
     const [stopDate, setStopDate] = useState("");
     const [stopDetails, setStopDetails] = useState("");
     const [selectedStop, setSelectedStop] = useState();
+
+    const [shares, setShares] = useState([]);
 
     const sortTrips = useCallback((trips) => trips.sort((trip, prevTrip) => trip.Id - prevTrip.Id), [])
 
@@ -85,8 +93,6 @@ const RoadtripPlanner = () => {
                 ...t.filter(trip => trip.Id !== expandedTrip),
                 roadTrip
             ]));
-            console.log(trips)
-            console.log(roadTrip)
         }
 
         setSelectedStop(null);
@@ -190,17 +196,109 @@ const RoadtripPlanner = () => {
                 },
                 body: JSON.stringify({ userId })
             });
-            const x = await response.json();
-            console.log(sortTrips(x))
-            console.log(x)
-            setTrips(sortTrips(x));
+
+            if (response.ok) {
+                const json = await response.json();
+                if (!json) return;
+                setTrips(sortTrips(json));
+            }
         }
+
         load();
 
         return () => {
             cancel = true;
         }
     }, [API, sortTrips, userId]);
+
+    useEffect(() => {
+        let cancel = false;
+        if (cancel) return;
+
+        const load = async () => {
+            const response = await fetch(API + "/roadtrip/shared", {
+                method: "POST", 
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ userId })
+            });
+
+            if (response.ok) {
+                const json = await response.json();
+                if (!json.length) return;
+                setSharedTrips(sortTrips(json));
+            }
+        }
+
+        load();
+
+        return () => {
+            cancel = true;
+        }
+    }, [API, sortTrips, userId]);
+
+    useEffect(() => {
+        let cancel = false;
+        const roadTrip = (showMine ? trips : sharedTrips).find(({ Id }) => Id === expandedTrip);
+        if (cancel || !expandedTrip || !roadTrip || roadTrip.Stops) return;
+
+        const load = async () => {
+            const response = await fetch(API + "/roadtrip/stops/get", {
+                method: "POST", 
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ userId, roadTripId: expandedTrip })
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                if (showMine) {
+                    setTrips(t => sortTrips([
+                        ...t.filter(trip => trip.Id !== expandedTrip),
+                        { ...roadTrip, Stops: data }
+                    ]))
+                } else {
+                    setSharedTrips(t => sortTrips([
+                        ...t.filter(trip => trip.Id !== expandedTrip),
+                        { ...roadTrip, Stops: data }
+                    ]));
+                }
+            }
+        }
+
+        load();
+
+        return () => {
+            cancel = true;
+        }
+    }, [API, expandedTrip, sharedTrips, showMine, sortTrips, trips, userId])
+
+    useEffect(() => {
+        let cancel = false;
+        if (cancel || !expandedTrip || !userId) return;
+
+        const load = async () => {
+            const response = await fetch(API + "/roadtrip/share/get", {
+                method: "POST", 
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({ roadTripId: expandedTrip, ownerId: userId })
+            })
+
+            if (response.ok) {
+                const json = await response.json();
+                setShares(json);
+            }
+        }
+
+        load();
+        return () => {
+            cancel = true
+        }
+    }, [API, expandedTrip, userId]);
 
     return (
         <Box style={{ display:"flex", justifyContent: "center" }}>
@@ -236,6 +334,7 @@ const RoadtripPlanner = () => {
             />   
             <EditStopModal 
                 isOpen={stopModalIsOpen}
+                editable={showMine}
                 setIsOpen={setStopModalIsOpen}
                 stopLocation={stopLocation}
                 setStopLocation={setStopLocation}
@@ -253,6 +352,13 @@ const RoadtripPlanner = () => {
                     setTripModalIsOpen(false);
                 }}
             />
+            <RoadTripShareModal 
+                isOpen={shareModalIsOpen}
+                setIsOpen={setShareModalIsOpen}
+                expandedTrip={expandedTrip}
+                shares={shares}
+                setShares={setShares}
+            />
             <Box
                 orientation="vertical"
                 sx={{ width: { xs: '95%', md: "40%" }}}
@@ -260,8 +366,16 @@ const RoadtripPlanner = () => {
                 display="flex"
                 flexDirection="column"
             >   
-                {trips.map((trip) => 
+                {
+                    isAuthenticated && 
+                        <ToggleButtonGroup fullWidth>
+                            <ToggleButton onClick={() => setShowMine(true)} disabled={!isAuthenticated || showMine} backgroundColor="primary" >My Trips</ToggleButton>
+                            <ToggleButton onClick={() => setShowMine(false)} disabled={!showMine} color="primary" >Shared With Me</ToggleButton>
+                        </ToggleButtonGroup>
+                }
+                {(showMine ? trips : sharedTrips).map((trip) => 
                     <RoadTrip
+                        editable={showMine}
                         key={trip.Id}
                         {...trip}
                         trips={trips}
@@ -281,6 +395,7 @@ const RoadtripPlanner = () => {
                             setExpandedTrip(tripId)
                             setTripModalIsOpen(true);
                         }}
+                        openShare={() => setShareModalIsOpen(true)}
                         setDeleteModalIsOpen={setDeleteTripModalIsOpen}
                         RoadTripStopComponent={(props) => <RoadTripStop 
                             {...props}
@@ -296,17 +411,19 @@ const RoadtripPlanner = () => {
                         />}
                     />
                 )}
-                <Button
-                    disabled={!isAuthenticated}
-                    onClick={() => {
-                        setExpandedTrip(0)
-                        setTripModalIsOpen(true)
-                    }}
-                    variant="contained"
-                    sx={{ mt: "1vh"}}
-                >
-                    {isAuthenticated ? "Add Trip" : "Please login to add a trip"}
-                </Button>
+                {showMine && 
+                    <Button
+                        disabled={!isAuthenticated}
+                        onClick={() => {
+                            setExpandedTrip(0)
+                            setTripModalIsOpen(true)
+                        }}
+                        variant="contained"
+                        sx={{ mt: "1vh"}}
+                    >
+                        {isAuthenticated ? "Add Trip" : "Please login to add a trip"}
+                    </Button>
+                }
             </Box>
         </Box>
     )

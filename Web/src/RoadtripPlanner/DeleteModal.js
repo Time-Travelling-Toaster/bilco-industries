@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {Button, ButtonGroup, Typography } from "@mui/material";
 import ModalPopup from "../Modal/ModalPopup";
 import { Box } from "@mui/system";
@@ -40,4 +40,4 @@ const DeleteModal = ({isOpen, setIsOpen, confirmCallback}) =>
         </Box>
     </ModalPopup>
 
-export default DeleteModal
+export default memo(DeleteModal)

@@ -2,8 +2,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LoginProvider } from '../Login/LoginContext';
 import HeaderBar from '../Header/HeaderBar.js';
-import { createTheme, CssBaseline, useMediaQuery } from '@mui/material';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider, createTheme, CssBaseline, useMediaQuery } from '@mui/material';
 import { StrictMode, useState } from 'react';
 import { ConfigProvider } from '../Config/ConfigContext';
 import { BrowserRouter } from 'react-router-dom';
@@ -26,10 +25,11 @@ const BilcoIndustries = () => {
             ...reducer,
             [key.trim(" ")]: value
         }
-    }, {})
+    }, {});
+
     const prefersLightTheme = useMediaQuery('(prefers-color-scheme: light)');
     const [isLightTheme, setIsLightTheme] = useState(cookies?.theme === "light" ? true : prefersLightTheme);
-    
+       
     const theme = createTheme({
         palette: {
             mode: isLightTheme ? "light" : "dark",

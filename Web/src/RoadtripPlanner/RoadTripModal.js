@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {Button, Grid, Typography, TextField } from "@mui/material";
 import ModalPopup from "../Modal/ModalPopup";
 import { MobileDatePicker } from '@mui/x-date-pickers';
@@ -59,4 +59,4 @@ const RoadTripModal = ({isOpen, setIsOpen, tripName, setTripName, tripDate, setT
         </Box>
     </ModalPopup>
 
-export default RoadTripModal
+export default memo(RoadTripModal)

@@ -1,4 +1,20 @@
-import { addRoadTrip, addRoadTripStop, deleteRoadTrip, deleteRoadTripStop, editRoadTrip, editRoadTripStop, getRoadTripById, getRoadTripStopsByRoadTripId, loadRoadTrips } from "../DAL/RoadTripDal.js";
+import { 
+    addRoadTrip,
+    addRoadTripShare,
+    addRoadTripStop,
+    deleteRoadTrip,
+    deleteRoadTripShare,
+    deleteRoadTripStop,
+    editRoadTrip,
+    editRoadTripStop,
+    getRoadTripForUserById as getRoadTripForUserById,
+    getRoadTripsByIds,
+    getRoadTripStopsByRoadTripId,
+    getShareByTripId,
+    loadRoadTrips,
+    loadRoadTripShares,
+    loadRoadTripSharesForViewer
+} from "../DAL/RoadTripDal.js";
 import { getUserById } from "../DAL/UserDal.js";
 import { Created, OK, Unauthorised, BadRequest} from "../Helpers/ResponseHelper.js";
 
@@ -57,7 +73,7 @@ export const deleteTrip = async (req, res) => {
         return;
     };
 
-    const trip = await getRoadTripById(userId, tripId);
+    const trip = await getRoadTripForUserById(userId, tripId);
     
     if (trip?.id) {
         Unauthorised(res);
@@ -102,7 +118,7 @@ export const addStop = async (req, res) => {
         return;
     };
 
-    const trip = await getRoadTripById(userId, roadTripId);
+    const trip = await getRoadTripForUserById(userId, roadTripId);
 
     if (trip?.id) {
         Unauthorised(res);
@@ -125,7 +141,7 @@ export const editStop = async (req, res) => {
         return;
     };
 
-    const trip = await getRoadTripById(userId, roadTripId);
+    const trip = await getRoadTripForUserById(userId, roadTripId);
     
     if (trip?.id) {
         Unauthorised(res);
@@ -141,19 +157,21 @@ export const editStop = async (req, res) => {
 export const loadStopsforTrip = async (req, res) => {
     const { body: { userId, roadTripId } } = req;
 
-    if (!roadTripId || !userId) {
+    if (!roadTripId) {
         BadRequest(res);
         res.send();
         return;
     };
 
-    const trip = await getRoadTripById(userId, roadTripId);
-    
-    if (trip?.id) {
-        Unauthorised(res);
-        res.send();
-        return;
-    };
+    if (userId) {
+        const trip = await getRoadTripForUserById(userId, roadTripId);
+        
+        if (trip?.id) {
+            Unauthorised(res);
+            res.send();
+            return;
+        };
+    }
 
     const response = await getRoadTripStopsByRoadTripId(roadTripId);
 
@@ -170,7 +188,7 @@ export const deleteStop = async (req, res) => {
         return;
     };
 
-    const trip = await getRoadTripById(userId, roadTripId);
+    const trip = await getRoadTripForUserById(userId, roadTripId);
     
     if (trip?.id) {
         Unauthorised(res);
@@ -182,3 +200,73 @@ export const deleteStop = async (req, res) => {
     OK(res);
     res.send();
 }
+
+export const addShare = async (req, res) => {
+    const { body: { roadTripId, ownerId, viewerId } } = req;
+
+    if (!roadTripId || !ownerId) {
+        BadRequest(res);
+        res.send();
+        return;
+    };
+
+    const share = await getShareByTripId(ownerId, roadTripId);
+    viewerId === 0 ? null : viewerId;
+
+    if (share?.id) {
+        Unauthorised(res);
+        res.send();
+        return;
+    };
+    
+    const response = await addRoadTripShare(roadTripId, ownerId, viewerId);
+
+    Created(res);
+    res.send({ shareId: response.lastID });
+}
+
+export const loadShares = async (req, res) => {
+    const { body: { roadTripId, ownerId } } = req;
+
+    if (!roadTripId || !ownerId) {
+        BadRequest(res);
+        res.send();
+        return;
+    };
+
+    const response = await loadRoadTripShares(ownerId, roadTripId);
+
+    OK(res);
+    res.send(response);
+}
+
+export const deleteShare = async (req, res) => {
+    const { body: { shareId, ownerId, roadTripId } } = req;
+
+    if (!roadTripId || !ownerId || !shareId) {
+        BadRequest(res);
+        res.send();
+        return;
+    };
+
+    const share = await getShareByTripId(ownerId, roadTripId);
+    
+    if (share?.id) {
+        Unauthorised(res);
+        res.send();
+        return;
+    };
+
+    await deleteRoadTripShare(shareId);
+    OK(res);
+    res.send();
+}
+
+export const loadSharedRoadTrips = async (req, res) => {
+    const { body: { userId = 0 } } = req;
+
+    const shares = await loadRoadTripSharesForViewer(userId);
+    const trips = await getRoadTripsByIds(shares.map(({ RoadTripId }) => RoadTripId))
+    OK(res);
+    res.send(trips)
+};

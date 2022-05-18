@@ -369,8 +369,8 @@ const RoadtripPlanner = () => {
                 {
                     isAuthenticated && 
                         <ToggleButtonGroup fullWidth>
-                            <ToggleButton onClick={() => setShowMine(true)} disabled={!isAuthenticated || showMine} backgroundColor="primary" >My Trips</ToggleButton>
-                            <ToggleButton onClick={() => setShowMine(false)} disabled={!showMine} color="primary" >Shared With Me</ToggleButton>
+                            <ToggleButton onClick={() => setShowMine(true)} value={showMine} disabled={!isAuthenticated || showMine} color="primary" >My Trips</ToggleButton>
+                            <ToggleButton onClick={() => setShowMine(false)} value={!showMine} disabled={!showMine} color="primary" >Shared With Me</ToggleButton>
                         </ToggleButtonGroup>
                 }
                 {(showMine ? trips : sharedTrips).map((trip) => 

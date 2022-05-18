@@ -54,7 +54,7 @@ export const LoginProvider = ({ children }) => {
         setIsAuthenticated(false);
         document.cookie = "token=";
         navigate("/login");
-        window.reload();
+        window.location.reload();
     };
 
     useEffect(() => {

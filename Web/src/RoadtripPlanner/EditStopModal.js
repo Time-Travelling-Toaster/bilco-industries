@@ -45,14 +45,25 @@ const EditStopModal = ({
                             value={stopDetails}
                             onChange={({ target: { value } }) => setStopDetails(value)}
                         />
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={async () => setDetailsModalIsOpen(false)}
-                        >
-                            Save
-                        </Button>
+                        { editable ?
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={saveCallback}
+                            >
+                                Save
+                            </Button> 
+                            :
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Close
+                            </Button> 
+                        }
                     </Box>
                 </ModalPopup>
                 <ModalPopup 
@@ -86,6 +97,7 @@ const EditStopModal = ({
                                     value={stopDate}
                                     color="secondary"
                                     onChange={setStopDate}
+                                    inputFormat="DD/MM/YYYY"
                                     renderInput={(params) =>
                                         <TextField
                                             color="secondary"

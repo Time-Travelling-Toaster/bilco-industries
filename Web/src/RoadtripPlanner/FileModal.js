@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ImageList, ImageListItem, ImageListItemBar, Modal, Typography } from "@mui/material";
+import { ImageList, ImageListItem, ImageListItemBar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import FileInput from "../Common/FileInput";
 import ModalPopup from "../Modal/ModalPopup";
@@ -131,12 +131,15 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
                     </ImageListItem>
                 ))}
             </ImageList>
-            <Box width={"100%"} textAlign="center">
-                <FileInput 
-                    onChange={({ target: { files: picked }}) => setNewFiles([...picked])}
-                    multi={true}
-                />
-            </Box>
+            {
+                canEdit &&
+                <Box width={"100%"} textAlign="center">
+                    <FileInput 
+                        onChange={({ target: { files: picked }}) => setNewFiles([...picked])}
+                        multi={true}
+                        />
+                </Box>
+            }
         </ModalPopup>
     )
 }

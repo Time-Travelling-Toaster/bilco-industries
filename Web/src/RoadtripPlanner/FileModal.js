@@ -37,9 +37,7 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
         const added = [...newFiles];
         const save = async () => {
             const responses = await Promise.all(newFiles.map( async file => {
-                
                 const dataUrl = await readAsDataURL(file);
-                console.log(dataUrl);
                 const response = await fetch(API + "/file/", {
                     method: "post",
                     headers: {
@@ -72,7 +70,6 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
 
     useEffect(() => {
         let cancel = false;
-        console.log(stopId)
         if (cancel || !stopId) return;
 
         const load = async () => {

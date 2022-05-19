@@ -64,11 +64,16 @@ export const InternalServerError = (res) => {
 }
 
 export const Created = (res) => {
-    res.statusCode = created.Status
-    res.statusMessage = created.Message
+    res.statusCode = created.Status;
+    res.statusMessage = created.Message;
 }
 
 export const Conflict = (res) => {
-    res.statusCode = conflict.Status
-    res.statusMessage = conflict.Message
+    res.statusCode = conflict.Status;
+    res.statusMessage = conflict.Message;
+}
+
+export const NotFound = (res) => {
+    res.statusCode = notFound.Status;
+    res.statusMessage = notFound.Message;
 }

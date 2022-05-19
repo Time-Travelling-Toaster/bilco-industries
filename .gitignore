@@ -28,3 +28,4 @@ yarn-error.log*
 */src/Appsettings.development.json
 API/Appsettings.development.json
 API/Appsettings.production.json
+API/Files/*

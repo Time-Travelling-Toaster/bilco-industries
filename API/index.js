@@ -1,81 +1,79 @@
 import express from "express";
-import fs from "fs"
-import { read, writeStream } from "./DAL/FileHandler.js";
-import { checkToken, loadUsers, login, signUp } from "./Controllers/LoginController.js";
-import { addShare, addStop, addTrip, deleteShare, deleteStop, deleteTrip, editStop, editTrip, loadSharedRoadTrips, loadShares, loadStopsforTrip, loadTrips } from "./Controllers/RoadTripController.js";
+import fs from "fs";
 import cors from "cors";
+
+import * as LoginController from "./Controllers/LoginController.js";
+import * as RoadTripController from "./Controllers/RoadTripController.js";
+import * as StopController from "./Controllers/StopController.js";
+import * as ShareController from "./Controllers/ShareController.js";
+import * as FileController from "./Controllers/FileController.js";
+
 const bilco = express();
 
 const environment = process.env.REACT_APP_ENVIRONMENT;
-const appConfig =JSON.parse(fs.readFileSync(`./Appsettings.${environment === "production" ? "production" : "development"}.json`));
+const appConfig = JSON.parse(fs.readFileSync(`./Appsettings.${environment === "production" ? "production" : "development"}.json`));
 
 const { port, allowedRoutes } = appConfig;
 
 bilco.use(cors({ origin: allowedRoutes }));
 
-bilco.use(express.json());
+bilco.use(express.json({
+    limit: "10mb"
+}));
 
 bilco.get('/', (req, res) => {
-    res.send("API is up")
+    res.send("API is up");
 });
 
 //////////////////////////////////////////////////
 // File Handler API
 
-bilco.get('/file/:name', async (req, res) => {
-    const file = await read(encodeURI(req.params.name));
-    console.log(file);
-    const response = OK
-    response.file = file;
-    res.send(response);
-});
+bilco.get('/file/:name', FileController.getFile);
 
-bilco.put('/file/:name', async (req, res) => {
-    const file = req.pipe();
-    const response = await writeStream(file, req.params.name)
-    response.send();
-})
+bilco.post('/file', FileController.saveFile)
 
 //////////////////////////////////////////////////
 // Road Trip API 
 
-bilco.post('/roadtrip/add', addTrip)
+bilco.post('/roadtrip/add', RoadTripController.addTrip)
 
-bilco.post('/roadtrip/edit', editTrip)
+bilco.post('/roadtrip/edit', RoadTripController.editTrip)
 
-bilco.post('/roadtrip/all', loadTrips);
+bilco.post('/roadtrip/all', RoadTripController.loadTrips);
 
-bilco.post('/roadtrip/delete', deleteTrip);
+bilco.post('/roadtrip/delete', RoadTripController.deleteTrip);
 
-bilco.post('/roadtrip/shared', loadSharedRoadTrips);
+bilco.post('/roadtrip/shared', RoadTripController.loadSharedRoadTrips);
 
-bilco.post('/roadtrip/stops/add', addStop);
+    // ROAD TRIP STOPS API
+    bilco.post('/roadtrip/stops/add', StopController.addStop);
 
-bilco.post('/roadtrip/stops/edit', editStop);
+    bilco.post('/roadtrip/stops/edit', StopController.editStop);
 
-bilco.post('/roadtrip/stops/get', loadStopsforTrip);
+    bilco.post('/roadtrip/stops/get', StopController.loadStopsforTrip);
 
-bilco.post('/roadtrip/stops/delete', deleteStop);
+    bilco.post('/roadtrip/stops/delete', StopController.deleteStop);
 
-bilco.post('/roadtrip/share/add', addShare);
 
-bilco.post('/roadtrip/share/get', loadShares);
+    // ROAD TRIP SHARES API
+    bilco.post('/roadtrip/share/add', ShareController.addShare);
 
-bilco.post('/roadtrip/share/delete', deleteShare);
+    bilco.post('/roadtrip/share/get', ShareController.loadShares);
 
+    bilco.post('/roadtrip/share/delete', ShareController.deleteShare);
 
 //////////////////////////////////////////////////
 // Login API
 
-bilco.post('/login', login);
+bilco.post('/login', LoginController.login);
 
-bilco.post('/signup', signUp);
+bilco.post('/signup', LoginController.signUp);
 
-bilco.post('/token', checkToken)
+bilco.post('/token', LoginController.checkToken)
 
-bilco.post('/users/get', loadUsers)
+bilco.post('/users/get', LoginController.loadUsers)
 
-//////////////////////////////////////////////////
-// COUCH DB API
+/////////////////////////////////////////////////
+// Start the server
 
 bilco.listen(port, () => console.log("API is listening on port " + port));

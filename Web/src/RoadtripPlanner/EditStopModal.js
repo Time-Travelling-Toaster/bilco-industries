@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import ModalPopup from "../Modal/ModalPopup";
 import { MobileDatePicker } from '@mui/x-date-pickers';
-import './Roadtrip.css';
 import { Box } from "@mui/system";
 
 const EditStopModal = ({

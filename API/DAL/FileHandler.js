@@ -1,26 +1,36 @@
 import fs from "fs/promises";
-import { InternalServerError, OK, Unauthorised } from "../Helpers/ResponseHelper.js";
 
-export const read = async (name, res) => {
+export const read = async (name) => {
     try {
         await fs.access('./Files/' + name)
-    } catch {
+    } catch (e) {
         console.log(`File ${ name } not found or doesn't have permissions`);
-        Unauthorised(res);
-        return res;
+        console.log(e);
+        return false;
     }
-    console.log('./Files/' + name);
-    res.write(fs.readFile('./files/' + name))
-    return res;
+
+    return fs.readFile('./files/' + name);
 }
 
-export const writeStream = async (stream, name, res) => {
+export const writeUrl = async (name, fileUrl) => {
+    const [, file] = fileUrl.split(',')
     try {
-        await fs.writeFile(name, stream);
-    } catch {
-        InternalServerError(res)
-        return 500;
+        await fs.writeFile("./Files/" + name, file, "base64");
+        return true;
+    } catch (e) {
+        console.log(`Could not create file ${name}`);
+        console.log(e)
+        return false;
     }
-    OK(res);
-    return res;
+}
+
+export const deleteFile = async (path) => {
+    try {
+        await fs.unlink("./Files/" + path);
+        return true;
+    } catch (e) {
+        console.log(`Could not delete file at ${path}`);
+        console.log(e)
+        return false;
+    }
 }

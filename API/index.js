@@ -7,6 +7,7 @@ import * as RoadTripController from "./Controllers/RoadTripController.js";
 import * as StopController from "./Controllers/StopController.js";
 import * as ShareController from "./Controllers/ShareController.js";
 import * as FileController from "./Controllers/FileController.js";
+import * as AttachmentController from "./Controllers/AttachmentController.js"
 
 const bilco = express();
 
@@ -24,6 +25,13 @@ bilco.use(express.json({
 bilco.get('/', (req, res) => {
     res.send("API is up");
 });
+
+//////////////////////////////////////////////////
+// Attachment API
+
+bilco.get("/attachments/:stopId", AttachmentController.getAttachmentsForStop)
+
+bilco.delete("/attachments/:userId/:stopId/:attachmentId", AttachmentController.deleteAttachment)
 
 //////////////////////////////////////////////////
 // File Handler API

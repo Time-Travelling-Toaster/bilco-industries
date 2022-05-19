@@ -9,6 +9,7 @@ import EditStopModal from "./EditStopModal";
 import RoadTripStop from "./RoadTripStop";
 import RoadTrip from "./RoadTrip";
 import RoadTripShareModal from "./RoadTripShareModal";
+import FileModal from "./FileModal"
 
 const RoadtripPlanner = () => {
     const { isAuthenticated, user: { userId } } = useLogin();
@@ -36,6 +37,7 @@ const RoadtripPlanner = () => {
     const [selectedStop, setSelectedStop] = useState();
 
     const [shares, setShares] = useState([]);
+    const [fileModalIsOpen, setFileModalIsOpen] = useState(false);
 
     const sortTrips = useCallback((trips) => trips.sort((trip, prevTrip) => trip.Id - prevTrip.Id), [])
 
@@ -351,6 +353,12 @@ const RoadtripPlanner = () => {
                     setSelectedStop("")
                     setTripModalIsOpen(false);
                 }}
+                clearData={() => {
+                    setTripDate("")
+                    setTripName("")
+                    setSelectedStop("")
+                    setTripModalIsOpen(false);
+                }}
             />
             <RoadTripShareModal 
                 isOpen={shareModalIsOpen}
@@ -358,6 +366,12 @@ const RoadtripPlanner = () => {
                 expandedTrip={expandedTrip}
                 shares={shares}
                 setShares={setShares}
+            />
+            <FileModal 
+                isOpen={fileModalIsOpen}
+                setIsOpen={setFileModalIsOpen}
+                stopId={selectedStop}
+                canEdit={showMine}
             />
             <Box
                 orientation="vertical"
@@ -401,6 +415,7 @@ const RoadtripPlanner = () => {
                             {...props}
                             setSelectedStop={setSelectedStop} 
                             setDeleteStopModalIsOpen={setDeleteStopModalIsOpen} 
+                            setFileModalOpen={setFileModalIsOpen}
                             openStop={(stopId, location, date, details) => {
                                 setStopLocation(location);
                                 setStopDate(date);

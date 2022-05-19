@@ -2,7 +2,7 @@ import fs from "fs/promises";
 
 export const read = async (name) => {
     try {
-        await fs.access('./Files/' + name)
+        await fs.access('./files/' + name)
     } catch (e) {
         console.log(`File ${ name } not found or doesn't have permissions`);
         console.log(e);
@@ -15,7 +15,7 @@ export const read = async (name) => {
 export const writeUrl = async (name, fileUrl) => {
     const [, file] = fileUrl.split(',')
     try {
-        await fs.writeFile("./Files/" + name, file, "base64");
+        await fs.writeFile("./files/" + name, file, "base64");
         return true;
     } catch (e) {
         console.log(`Could not create file ${name}`);
@@ -26,7 +26,7 @@ export const writeUrl = async (name, fileUrl) => {
 
 export const deleteFile = async (path) => {
     try {
-        await fs.unlink("./Files/" + path);
+        await fs.unlink("./files/" + path);
         return true;
     } catch (e) {
         console.log(`Could not delete file at ${path}`);

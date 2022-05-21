@@ -8,10 +8,12 @@ import { useLogin } from "../Login/LoginContext";
 import { readAsDataURL } from "promise-file-reader";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import DownloadIcon from '@mui/icons-material/Download';
+import FullScreenImageModal from "./FullScreenImageModal";
 
 const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
     const [newFiles, setNewFiles] = useState([]);
     const [files, setFiles] = useState([]);
+    const [selectedImageSrc, setSelectedImageSrc] = useState(false);
     const { user: { userId } } = useLogin();
     const { appConfig : { connectionStrings: { API } } } = useConfig(); 
 
@@ -92,7 +94,12 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             clearData={() => {}}
-        >
+        >   
+            <FullScreenImageModal 
+                isOpen={selectedImageSrc !== null}
+                setIsOpen={() => setSelectedImageSrc(null)}
+                src={selectedImageSrc}
+            />
             <Typography
                 color="secondary" 
                 variant="h4"
@@ -111,20 +118,31 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
                             src={`${API}/file/${file.Path}?w=248fit=crop&auto=format&download=true`} 
                             srcSet={`${API}/file/${file.Path}?download=true&w=248&fit=crop&auto=format&dpr=2 2x`}
                             alt={file.FileName}
+                            onClick={() => setSelectedImageSrc(`${API}/file/${file.Path}?download=true`)}
                             loading="lazy"
                         />
                         <ImageListItemBar 
-                            title={file.FileName}
+                            title={
+                                <Typography>
+                                    {file.FileName}
+                                </Typography>
+                            }
                             actionIcon={
-                                <>
-                                    {canEdit && <DeleteForever onClick={() => deleteFile(file.Id)} />}
+                                <Box display={"flex"} flexDirection={"row"}>
+                                    {canEdit && 
+                                        <DeleteForever onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteFile(file.Id)}
+                                            } 
+                                        />
+                                    }
                                     <a
                                         href={`${API}/file/${file.Path}?w=248fit=crop&auto=format&download=true`}
                                         download
                                     >
                                         <DownloadIcon/>
                                     </a>
-                                </>
+                                </Box>
                             }
                         >
                         </ImageListItemBar>

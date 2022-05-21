@@ -27,12 +27,17 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
           </Box>
           <Typography
             variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2 , display: 'flex' }}
-            onClick={() => navigate('/')}
           >
-            Bilco Industries
+            <Typography
+              variant="gradient"
+              noWrap
+              component="div"
+              sx={{ mr: 2 , display: 'flex' }}
+              onClick={() => navigate('/')}
+              grad
+            >
+              Bilco Industries
+            </Typography>
           </Typography>
           <Box sx={{ flexGrow: 1, display: {md: "block", xs: "none"} }}>
             <NavMenu />

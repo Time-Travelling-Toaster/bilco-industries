@@ -34,12 +34,20 @@ const BilcoIndustries = () => {
         palette: {
             mode: isLightTheme ? "light" : "dark",
             primary: {
-                main: '#282c34',
+                main: "#282c34"
             },
             secondary: {
-                main: '#f50057',
+                main: '#5fcc00'
+            }
+        },
+        typography: {
+            gradient: {
+                fontSize: "inherit",
+                background: "-webkit-linear-gradient(45deg, #F50057 30%, #5FCC00 70%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent"
             },
-        }
+        },
     })
 
     return (
@@ -58,7 +66,7 @@ const BilcoIndustries = () => {
                                         <Route path="roadtrip" element={<RoadtripPlanner />} />
                                         <Route path="signup" element={<SignUp />} />
                                         <Route path="login" element={<Login />} />
-                                        <Route path="/" element={<Home />} />
+                                        <Route path="*" element={<Home />} />
                                     </Routes>
                                 </LoginProvider>
                             </CssBaseline>

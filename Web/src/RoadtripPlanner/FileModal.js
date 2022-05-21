@@ -96,7 +96,7 @@ const FileModal = ({isOpen, setIsOpen, stopId, canEdit}) => {
             clearData={() => {}}
         >   
             <FullScreenImageModal 
-                isOpen={selectedImageSrc !== null}
+                isOpen={!!selectedImageSrc}
                 setIsOpen={() => setSelectedImageSrc(null)}
                 src={selectedImageSrc}
             />

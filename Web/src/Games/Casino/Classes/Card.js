@@ -17,8 +17,8 @@ class Card {
         else this.value = name
     }
 
-    getImage = ({ className, width, height}) => <img width={width} height={height} className={className} src={require(`../../Images/Cards/${this.name}_of_${this.suit}.png`)}></img>;
-    getBackImage = ({ className, width, height}) => <img width={width} height={height} className={className} src={require(`../../Images/Cards/back.png`)}></img>
+    getImage = ({ className, width, height}) => <img width={width} height={height} className={className} src={require(`../Images/Cards/${this.name}_of_${this.suit}.png`)}></img>;
+    getBackImage = ({ className, width, height}) => <img width={width} height={height} className={className} src={require(`../Images/Cards/back.png`)}></img>
  }
 
  export default Card;

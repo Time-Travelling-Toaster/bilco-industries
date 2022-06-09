@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Shoe from "../Classes/Shoe";
 import { Button, ButtonGroup } from "@mui/material";
 import BlackjackPlayer from '../Classes/BlackjackPlayer.js'
-import "../../Blackjack.css"
+import "../Blackjack.css"
 
 const Blackjack = () => {
     const initPlayer = (strategy) => ({

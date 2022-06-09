@@ -8,10 +8,6 @@ const modalSytle = {
     outline: 0
 }
 
-const x = {
-    padding: 4
-}
-
 const ModalPopup = ({isOpen, setIsOpen, children, clearData}) => (
     <Dialog
         open={isOpen}
@@ -21,7 +17,7 @@ const ModalPopup = ({isOpen, setIsOpen, children, clearData}) => (
         }}
         style={modalSytle}
     >
-        <Box sx={x} >
+        <Box sx={{ padding: 4 }} >
             {children}
         </Box>
     </Dialog>

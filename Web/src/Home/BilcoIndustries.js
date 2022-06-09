@@ -6,8 +6,8 @@ import { ThemeProvider, createTheme, CssBaseline, useMediaQuery } from '@mui/mat
 import { StrictMode, useState } from 'react';
 import { ConfigProvider } from '../Config/ConfigContext';
 import { BrowserRouter } from 'react-router-dom';
-import SlotMachine from '../Casino/Games/Pages/SlotMachine';
-import Blackjack from "../Casino/Games/Pages/Blackjack";
+import SlotMachine from '../Games/Casino/Pages/SlotMachine';
+import Blackjack from "../Games/Casino/Pages/Blackjack";
 import Sweepstake from "../Sweepstake/Sweepstake";
 import RoadtripPlanner from "../RoadtripPlanner/RoadtripPlanner";
 import Login from "../Login/Login";
@@ -17,6 +17,12 @@ import {
     Route,
 } from "react-router-dom";
 import Home from './Home';
+import Gecho from '../Gecho/Gecho';
+import MineSweeper from '../Games/Minesweeper/MineSweeper';
+
+const primary = "#282c34";
+const secondaryMain = "#5fcc00";
+const secondaryAlt = "#f50057";
 
 const BilcoIndustries = () => {
     const cookies = document.cookie.split(";").reduce((reducer, cookie) => {
@@ -34,16 +40,17 @@ const BilcoIndustries = () => {
         palette: {
             mode: isLightTheme ? "light" : "dark",
             primary: {
-                main: "#282c34"
+                main: primary
             },
             secondary: {
-                main: '#5fcc00'
+                main: secondaryMain,
+                alt: secondaryAlt
             }
         },
         typography: {
             gradient: {
                 fontSize: "inherit",
-                background: "-webkit-linear-gradient(45deg, #F50057 30%, #5FCC00 70%)",
+                background: "-webkit-linear-gradient(45deg, " + secondaryAlt + " 30%, " + secondaryMain + " 70%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent"
             },
@@ -62,10 +69,12 @@ const BilcoIndustries = () => {
                                     <Routes>
                                         <Route path="casino/slot-machine" element={<SlotMachine />} />
                                         <Route path="casino/black-jack" element={<Blackjack />} />
+                                        <Route path="games/mine-sweeper" element={<MineSweeper />} />
                                         <Route path="sweepstake" element={<Sweepstake />} />
                                         <Route path="roadtrip" element={<RoadtripPlanner />} />
                                         <Route path="signup" element={<SignUp />} />
                                         <Route path="login" element={<Login />} />
+                                        <Route path="gecho" element={<Gecho />} />
                                         <Route path="*" element={<Home />} />
                                     </Routes>
                                 </LoginProvider>

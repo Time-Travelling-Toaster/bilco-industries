@@ -22,7 +22,7 @@ const MenuProps = {
 const MultiSelectChip = ({ items, label, selectedItems, setSelectedItems }) => {
     const theme = useTheme();
     const getNameFromId = (id) => {
-        const { name = "" } = items.find(item => item.id === id);
+        const { name = "" } = items.find(item => item.id === id) || {};
         return name;
     }
 

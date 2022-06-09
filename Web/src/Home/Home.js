@@ -1,11 +1,8 @@
-import { useTheme } from "@emotion/react";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
 const Home = () => {
-    const theme = useTheme();
-
     const ContentCard = ({content, title, subTitle, action}) => (
         <Card sx={{ width: { md: "30%", xs: "80%" }, mb: "3%"}}>
             <CardContent>

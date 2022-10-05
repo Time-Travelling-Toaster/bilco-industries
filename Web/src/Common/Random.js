@@ -1,0 +1,1 @@
+export const RandomInRange = (limit) => Math.floor(Math.random() * limit)

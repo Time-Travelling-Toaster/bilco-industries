@@ -34,7 +34,6 @@ const HeaderBar = ({ isLightTheme, setIsLightTheme }) => {
               component="div"
               sx={{ mr: 2 , display: 'flex' }}
               onClick={() => navigate('/')}
-              grad
             >
               Bilco Industries
             </Typography>

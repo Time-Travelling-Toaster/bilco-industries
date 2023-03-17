@@ -19,6 +19,8 @@ import {
 import Home from './Home';
 import Gecho from '../Gecho/Gecho';
 import MineSweeper from '../Games/Minesweeper/MineSweeper';
+import Ceremony from '../Wedding/Ceremony';
+import AfterParty from '../Wedding/AfterParty';
 
 const primary = "#282c34";
 const secondaryMain = "#5fcc00";
@@ -35,7 +37,7 @@ const BilcoIndustries = () => {
 
     const prefersLightTheme = useMediaQuery('(prefers-color-scheme: light)');
     const [isLightTheme, setIsLightTheme] = useState(cookies?.theme === "light" ? true : prefersLightTheme);
-       
+
     const theme = createTheme({
         palette: {
             mode: isLightTheme ? "light" : "dark",
@@ -75,6 +77,8 @@ const BilcoIndustries = () => {
                                         <Route path="signup" element={<SignUp />} />
                                         <Route path="login" element={<Login />} />
                                         <Route path="gecho" element={<Gecho />} />
+                                        <Route path="wedding/ceremony" element={<Ceremony />} />
+                                        <Route path="wedding/after-party" element={<AfterParty />} />
                                         <Route path="*" element={<Home />} />
                                     </Routes>
                                 </LoginProvider>

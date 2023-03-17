@@ -1,4 +1,0 @@
-Id [PK NOT NULLL AUTO INCREMENT]
-RoadTripId [INT NOT NULL] Links to roadtrip
-OwnerId [INT NOT NULL] links to user
-ViewerId [INT] Links to user IF NULL public 

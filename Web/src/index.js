@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import BilcoIndustries from './Home/BilcoIndustries';
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root'),  
+    document.getElementById('root'),
 );
 
 root.render(<BilcoIndustries />);

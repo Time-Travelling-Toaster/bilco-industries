@@ -29,3 +29,5 @@ yarn-error.log*
 API/Appsettings.development.json
 API/Appsettings.production.json
 API/Files/*
+API/prisma/schema.prisma
+API/prisma/bilco.db

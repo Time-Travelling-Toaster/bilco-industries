@@ -1,3 +1,0 @@
-PK
-RoadTripStopId [INT] [Links to roadtrip stop]
-Path [STRING] [path to file in FTP server]

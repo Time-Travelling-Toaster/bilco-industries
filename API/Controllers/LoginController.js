@@ -3,10 +3,10 @@ import { Conflict, Created, OK, Unauthorised, BadRequest } from "../Helpers/Resp
 import { getUser, saveUser, createToken, getUserByToken, getUsers, getUserById } from "../DAL/UserDal.js";
 import { randomUUID } from 'crypto'
 const defaultHash = "$argon2i$v=19$m=16,t=2,p=1$T0QzeEFGalIzejFGZWR3RQ$4nlIO8TZwyjtS36hhXFGrA";
-const tokenLifetime = 604800 * 1000 ; // 1 week
+const tokenLifetime = 604800 * 1000; // 1 week
 
 export const login = async (req, res) => {
-    const { body : { username, password, remember } } = req;
+    const { body: { username, password, remember } } = req;
 
     if (!username || !password) {
         BadRequest(res);
@@ -16,6 +16,7 @@ export const login = async (req, res) => {
 
     const user = await getUser(username);
     const { Id, PasswordHash = defaultHash } = (user || {});
+    console.log(PasswordHash)
 
     const valid = await argon2.verify(PasswordHash, password);
 
@@ -27,9 +28,9 @@ export const login = async (req, res) => {
             expiryDate = new Date(expiryDate + tokenLifetime).toUTCString();
 
             await createToken(Id, token, expiryDate);
-            res.send({ userId: Id, token, expiryDate})
+            res.send({ userId: Id, token, expiryDate })
         } else {
-            res.send({ userId: Id})
+            res.send({ userId: Id })
         }
         return;
     };
@@ -39,7 +40,7 @@ export const login = async (req, res) => {
 }
 
 export const signUp = async (req, res) => {
-    const { body : { username, password } } = req ;
+    const { body: { username, password } } = req;
     if (!username || !password) {
         BadRequest(res);
         res.send();
@@ -60,7 +61,7 @@ export const signUp = async (req, res) => {
 }
 
 export const checkToken = async (req, res) => {
-    const { body : { token } } = req ;
+    const { body: { token } } = req;
     if (!token) {
         BadRequest(res);
         res.send();
@@ -76,8 +77,8 @@ export const checkToken = async (req, res) => {
     };
 
     const { UserName, ExpiryDate, Id } = existingUser;
-    
-    if (new Date(ExpiryDate).getTime() > new Date().getTime() ) {
+
+    if (new Date(ExpiryDate).getTime() > new Date().getTime()) {
         Unauthorised(res);
         res.send();
         return;
@@ -87,7 +88,7 @@ export const checkToken = async (req, res) => {
 }
 
 export const loadUsers = async (req, res) => {
-    const { body : { userId } } = req;
+    const { body: { userId } } = req;
 
     if (!userId) {
         BadRequest(res);

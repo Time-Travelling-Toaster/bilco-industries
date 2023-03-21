@@ -2,7 +2,7 @@
 .wedding {
     font-family: 'Pacifico', cursive;
     background-color: pink;
-    height: 100vh;
+    min-height: 100vh;
     color: black;
 }
 
@@ -14,8 +14,6 @@
     display: flex;
     justify-content: center;
     text-align: center;
-    /* margin-left: 30vw;
-    margin-right: 30vw; */
 }
 
 .wedding li {
@@ -30,7 +28,7 @@
     flex-direction: column;
     justify-self: center;
     max-width: 50vw;
-    height: 90vh;
+    min-height: 90vh;
 }
 
 .wedding header {

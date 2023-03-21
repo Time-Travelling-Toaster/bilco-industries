@@ -3,7 +3,7 @@ import './wedding.css';
 const AfterParty = () =>
     <div className="wedding">
         <header>
-            <h1>Ceremony</h1>
+            <h1>After Party</h1>
         </header>
         <div className="center-content" >
             <div className="list-container">
